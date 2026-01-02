@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Login | PDF Analytics</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="login-container">
+  <div class="login-card">
+    <div style="text-align: center; margin-bottom: 40px;">
+      <div style="font-size: 56px; color: var(--primary); margin-bottom: 20px;">
+        <i class="fas fa-file-pdf"></i>
+      </div>
+      <h2>PDF Analytics Platform</h2>
+      <p style="color: var(--text-secondary); margin-top: 8px; font-size: 15px;">
+        Secure Admin Dashboard
+      </p>
+    </div>
+
+    <div style="margin-bottom: 24px;">
+      <label style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-weight: 500; font-size: 14px;">
+        <i class="fas fa-envelope"></i> Email Address
+      </label>
+      <input type="email" id="email" placeholder="admin@example.com" required />
+    </div>
+
+    <div style="margin-bottom: 32px;">
+      <label style="display: block; margin-bottom: 8px; color: var(--text-secondary); font-weight: 500; font-size: 14px;">
+        <i class="fas fa-lock"></i> Password
+      </label>
+      <input type="password" id="password" placeholder="••••••••" required />
+    </div>
+
+    <button onclick="login()" style="width: 100%; padding: 16px; font-size: 16px;">
+      <i class="fas fa-sign-in-alt"></i> Sign In to Dashboard
+    </button>
+
+    <p style="text-align: center; margin-top: 24px; color: var(--text-secondary); font-size: 13px;">
+      <i class="fas fa-shield-alt"></i> Secure authentication required
+    </p>
+
+    <p id="error" class="error"></p>
+  </div>
+</div>
+
+<script src="auth.js"></script>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>PDF Processing Platform</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2>Admin Console</h2>
+    <div class="profile-card">
+        <div class="avatar" id="avatar"></div>
+        <div class="profile-info">
+            <span id="profileName">Admin</span>
+            <small id="profileEmail">admin@example.com</small>
+            <span class="role">Admin</span>
+        </div>
+    </div>
+    <ul>
+      <li onclick="showTab('dashboard')">📊 Dashboard</li>
+      <li onclick="showTab('upload')">📤 Upload PDF</li>
+      <li onclick="showTab('documents')">📁 Documents</li>
+      <li onclick="logout()">👋 Logout</li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="tab">
+      <h1>Analytics Dashboard</h1>
+
+  <!-- ✅ DATE RANGE FILTER GOES HERE -->
+  <div class="date-filter">
+    <div>
+      <label>From</label>
+      <input type="date" id="startDate" />
+    </div>
+
+    <div>
+      <label>To</label>
+      <input type="date" id="endDate" />
+    </div>
+
+    <button onclick="applyDateFilter()">Apply</button>
+    <button class="secondary" onclick="resetDateFilter()">Reset</button>
+  </div>
+      <div class="metrics">
+        <div class="metric-card">
+          <h3>Total PDFs</h3>
+          <p id="totalPdfs">0</p>
+        </div>
+        <div class="metric-card">
+          <h3>Processed</h3>
+          <p id="processedPdfs">0</p>
+        </div>
+        <div class="metric-card">
+          <h3>Failed</h3>
+          <p id="failedPdfs">0</p>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <canvas id="uploadChart"></canvas>
+      </div>
+
+    </section>
+
+    <!-- Upload -->
+    <section id="upload" class="tab hidden">
+      <h1>Upload PDF</h1>
+      <p>Upload your pdf of Standards here</p>
+      <br>
+      <input type="file" id="pdfInput" accept="application/pdf" />
+      <button onclick="uploadPDF()">Upload</button>
+      <p id="uploadStatus"></p>
+    </section>
+
+    <!-- Documents -->
+    <section id="documents" class="tab hidden">
+      <h1>Uploaded Documents</h1>
+      <table>
+        <thead>
+          <tr>
+            <th>File</th>
+            <th>Status</th>
+            <th>Uploaded</th>
+            <th>Uploaded By</th>
+          </tr>
+        </thead>
+        <tbody id="pdfTable"></tbody>
+      </table>
+    </section>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>

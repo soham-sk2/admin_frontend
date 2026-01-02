@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PDF Processing Platform</title>
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+<div class="app-layout">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <h2><i class="fas fa-file-pdf"></i> PDF Analytics</h2>
+    <div class="profile-card">
+        <div class="avatar" id="avatar"></div>
+        <div class="profile-info">
+            <span id="profileName">Administrator</span>
+            <small id="profileEmail">admin@example.com</small>
+            <span class="role">Super Admin</span>
+        </div>
+    </div>
+    <ul>
+      <li onclick="showTab('dashboard')"><i class="fas fa-chart-line"></i> Dashboard Analytics</li>
+      <li onclick="showTab('upload')"><i class="fas fa-cloud-upload-alt"></i> Upload PDF</li>
+      <li onclick="showTab('documents')"><i class="fas fa-folder-open"></i> Document Library</li>
+      <li onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</li>
+    </ul>
+  </aside>
+
+  <!-- Main Content -->
+  <main class="main-content">
+
+    <!-- Dashboard -->
+    <section id="dashboard" class="tab">
+      <h1>Analytics Dashboard</h1>
+      <p>Monitor your PDF processing statistics and trends</p>
+
+      <!-- Date Range Filter -->
+      <div class="date-filter">
+        <div>
+          <label><i class="fas fa-calendar-alt"></i> Start Date</label>
+          <input type="date" id="startDate" />
+        </div>
+
+        <div>
+          <label><i class="fas fa-calendar-check"></i> End Date</label>
+          <input type="date" id="endDate" />
+        </div>
+
+        <button onclick="applyDateFilter()"><i class="fas fa-filter"></i> Apply Filter</button>
+        <button class="secondary" onclick="resetDateFilter()"><i class="fas fa-redo"></i> Reset</button>
+      </div>
+
+      <div class="metrics">
+        <div class="metric-card">
+          <h3>Total PDFs</h3>
+          <p id="totalPdfs">0</p>
+          <small>All uploaded documents</small>
+        </div>
+        <div class="metric-card">
+          <h3>Processed</h3>
+          <p id="processedPdfs">0</p>
+          <small>Successfully extracted</small>
+        </div>
+        <div class="metric-card">
+          <h3>Failed</h3>
+          <p id="failedPdfs">0</p>
+          <small>Processing errors</small>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3><i class="fas fa-chart-bar"></i> Upload Activity</h3>
+        <canvas id="uploadChart"></canvas>
+      </div>
+
+    </section>
+
+    <!-- Upload -->
+    <section id="upload" class="tab hidden">
+      <h1>Upload PDF Document</h1>
+      <p>Upload your PDF files for text extraction and processing</p>
+
+      <div style="margin: 40px 0; padding: 40px; background: white; border-radius: var(--radius); box-shadow: var(--shadow);">
+        <input type="file" id="pdfInput" accept="application/pdf" style="margin-bottom: 24px;" />
+        <button onclick="uploadPDF()" style="padding: 16px 32px; font-size: 16px;">
+          <i class="fas fa-upload"></i> Process PDF
+        </button>
+      </div>
+      
+      <p id="uploadStatus"></p>
+    </section>
+
+    <!-- Documents -->
+    <section id="documents" class="tab hidden">
+      <h1>Document Library</h1>
+      <p>All uploaded PDF files and their processing status</p>
+
+      <table>
+        <thead>
+          <tr>
+            <th>File Name</th>
+            <th>Status</th>
+            <th>Upload Date</th>
+            <th>Uploaded By</th>
+          </tr>
+        </thead>
+        <tbody id="pdfTable"></tbody>
+      </table>
+    </section>
+
+  </main>
+</div>
+
+<script src="app.js"></script>
+</body>
+</html>
