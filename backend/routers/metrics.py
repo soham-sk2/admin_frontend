@@ -26,15 +26,18 @@ def metrics(
     query = db.query(PDFDocument)
 
     if start_date:
+        # Parse the date string and compare only the date part
+        start_date_obj = datetime.fromisoformat(start_date.replace('Z', '+00:00')).date()
         query = query.filter(
-            PDFDocument.uploaded_at >= datetime.fromisoformat(start_date)
+            func.date(PDFDocument.uploaded_at) >= start_date_obj
         )
 
     if end_date:
+        # Parse the date string and compare only the date part
+        end_date_obj = datetime.fromisoformat(end_date.replace('Z', '+00:00')).date()
         query = query.filter(
-            PDFDocument.uploaded_at <= datetime.fromisoformat(end_date)
+            func.date(PDFDocument.uploaded_at) <= end_date_obj
         )
-    
     total = query.count()
     processed = query.filter(PDFDocument.status == "completed").count()
     failed = query.filter(PDFDocument.status == "failed").count()

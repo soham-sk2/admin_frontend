@@ -43,20 +43,54 @@ function showTab(tabId) {
 
 async function uploadPDF() {
   const file = document.getElementById("pdfInput").files[0];
-  if (!file) return;
+  const uploadStatus = document.getElementById("uploadStatus");
+  
+  if (!file) {
+    uploadStatus.innerHTML = '<span style="color: var(--warning)"><i class="fas fa-exclamation-circle"></i> Please select a PDF file first</span>';
+    return;
+  }
 
   const formData = new FormData();
   formData.append("file", file);
 
-  await fetch(`${API_BASE}/upload`, {
-    headers: {
-    "Authorization": `Bearer ${token}`
-    },
-    method: "POST",
-    body: formData
-  });
+  // Show uploading status
+  uploadStatus.innerHTML = '<span style="color: var(--primary)"><i class="fas fa-spinner fa-spin"></i> Uploading and processing PDF...</span>';
+  uploadStatus.style.display = 'block';
 
-  loadDashboardMetrics();
+  try {
+    const response = await fetch(`${API_BASE}/upload`, {
+      method: "POST",
+      headers: {
+        "Authorization": `Bearer ${token}`
+      },
+      body: formData
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      
+      if (response.status === 400 && errorData.detail === "File already processed successfully") {
+        uploadStatus.innerHTML = '<span style="color: var(--warning)"><i class="fas fa-exclamation-triangle"></i> File already in database</span>';
+        return;
+      }
+      
+      throw new Error(errorData.detail || 'Upload failed');
+    }
+
+    const data = await response.json();
+    uploadStatus.innerHTML = `<span style="color: var(--success)"><i class="fas fa-check-circle"></i> ${data.message}</span>`;
+    
+    // Clear the file input
+    document.getElementById("pdfInput").value = '';
+    
+    // Refresh the dashboard and documents
+    loadDashboardMetrics();
+    setTimeout(() => loadDocuments(), 1000); // Small delay to ensure processing started
+
+  } catch (error) {
+    console.error('Upload error:', error);
+    uploadStatus.innerHTML = `<span style="color: var(--danger)"><i class="fas fa-times-circle"></i> Error: ${error.message}</span>`;
+  }
 }
 
 async function loadDocuments() {
@@ -81,10 +115,22 @@ async function loadDocuments() {
       minute: '2-digit'
     });
 
+    // Add status badge with appropriate styling
+    let statusBadge = '';
+    if (d.status === 'completed') {
+      statusBadge = `<span class="status-completed"><i class="fas fa-check"></i> ${d.status}</span>`;
+    } else if (d.status === 'failed') {
+      statusBadge = `<span class="status-failed"><i class="fas fa-times"></i> ${d.status}</span>`;
+    } else if (d.status === 'processing') {
+      statusBadge = `<span class="status-processing"><i class="fas fa-spinner fa-spin"></i> ${d.status}</span>`;
+    } else {
+      statusBadge = `<span>${d.status}</span>`;
+    }
+
     table.innerHTML += `
       <tr>
         <td>${d.filename}</td>
-        <td>${d.status}</td>
+        <td>${statusBadge}</td>
         <td>${formattedDate}</td>
         <td>${d.uploaded_by_email}</td>
       </tr>
@@ -127,7 +173,6 @@ function resetDateFilter() {
   loadDashboardMetrics();
 }
 
-
 function renderChart(dailyData) {
   const ctx = document.getElementById("uploadChart");
 
@@ -147,10 +192,6 @@ function renderChart(dailyData) {
           backgroundColor: "#2563eb",
           borderRadius: 6,
           fill: true,
-          // tension: 0.4,          // smooth curve
-          // pointRadius: 4,
-          // pointHoverRadius: 6,
-          // pointBackgroundColor: "#2563eb"
         }
       ]
     },
@@ -196,16 +237,10 @@ function renderChart(dailyData) {
   });
 }
 
-
 function logout() {
-  // 1. Remove JWT
   localStorage.removeItem("access_token");
-
-  // 2. Redirect to login page
   window.location.href = "login.html";
 }
-
-
 
 // Default view
 showTab('dashboard');

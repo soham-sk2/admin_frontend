@@ -12,15 +12,12 @@ class PDFDocumentSchema(BaseModel):
     filename: str
     status: str
     size: int
-
-    uploaded_by_email: str  # ✅ NEW
-
+    uploaded_by_email: str
     uploaded_at: datetime
     processed_at: Optional[datetime] = None
 
     class Config:
         from_attributes = True
-
 
 
 class UploadResponseSchema(BaseModel):
@@ -31,6 +28,18 @@ class UploadResponseSchema(BaseModel):
     id: int
     filename: str
     status: str
+    message: str
+
+
+class RetryResponseSchema(BaseModel):
+    """
+    Used for:
+    - Response when retrying a failed PDF
+    """
+    id: int
+    filename: str
+    status: str
+    message: str
 
 
 # =========================
@@ -68,6 +77,7 @@ class MessageResponseSchema(BaseModel):
     - Generic API responses
     """
     message: str
+
 
 # =========================
 # Admin Auth Schemas
